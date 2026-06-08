@@ -35,7 +35,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '25'
 
       - name: Cache Synthea JAR
         id: cache-synthea
@@ -48,15 +48,6 @@ jobs:
         if: steps.cache-synthea.outputs.cache-hit != 'true'
         run: wget -q https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: pip
-      
-      # - name: Install Python dependencies
-      #   run: pip install -r requirements.txt
-
       - name: Generate FHIR data
         run: |
           java -jar synthea-with-dependencies.jar \
@@ -65,10 +56,19 @@ jobs:
             -p ${{ inputs.population }} \
             "${{ inputs.state }}" \
             "${{ inputs.city }}"
+      
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.12'
+      #     cache: pip
+      
+      # # - name: Install Python dependencies
+      # #   run: pip install -r requirements.txt
 
-      - name: Load to Snowflake
-        env:
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-        run: python scripts/load_fhir.py
+      # - name: Load to Snowflake
+      #   env:
+      #     SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      #     SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      #     SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      #   run: python scripts/load_fhir.py
