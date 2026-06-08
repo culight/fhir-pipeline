@@ -1,0 +1,73 @@
+# secrets
+.secrets
+*.env
+.env.*
+secrets.yml
+secrets.yaml
+
+# dbt
+dbt/logs/
+dbt/target/
+dbt/.user.yml
+dbt/dbt_packages/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Java / Maven / Gradle
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+hs_err_pid*
+
+# IDEs
+.idea/
+*.iml
+*.iws
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+logs/
+
+# Snowflake / SQL artifacts
+*.dmp

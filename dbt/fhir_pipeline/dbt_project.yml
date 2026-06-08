@@ -1,0 +1,24 @@
+name: fhir_pipeline
+
+profile: fhir_pipeline
+
+seed-paths: ["seeds"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+seeds:
+  # Builds seeds into '<your_schema_name>_raw'
+  fhir_pipeline:
+    +schema: raw
+
+models:
+  fhir_pipeline:
+    +static_analysis: strict
+    # Materialize staging models as views, and marts as tables
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -1,0 +1,74 @@
+name: Generate and Load FHIR Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      config_file:
+        description: Path to synthea.properties config file (relative to repo root)
+        required: true
+        default: synthea/synthea.properties
+      population:
+        description: Number of patients to generate
+        required: false
+        default: '100'
+      state:
+        description: State for patient generation
+        required: false
+        default: Georgia
+      city:
+        description: City for patient generation
+        required: false
+        default: Atlanta
+      seed:
+        description: Random seed for reproducibility
+        required: false
+        default: '42'
+
+jobs:
+  generate-and-load:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Cache Synthea JAR
+        id: cache-synthea
+        uses: actions/cache@v4
+        with:
+          path: synthea-with-dependencies.jar
+          key: synthea-master-latest
+
+      - name: Download Synthea
+        if: steps.cache-synthea.outputs.cache-hit != 'true'
+        run: wget -q https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
+
+      - name: Generate FHIR data
+        run: |
+          java -jar synthea-with-dependencies.jar \
+            -c "${{ inputs.config_file }}" \
+            -s ${{ inputs.seed }} \
+            -p ${{ inputs.population }} \
+            "${{ inputs.state }}" \
+            "${{ inputs.city }}"
+
+      - name: Load to Snowflake
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        run: python scripts/load_fhir.py
