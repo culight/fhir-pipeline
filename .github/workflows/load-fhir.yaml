@@ -35,16 +35,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: pip
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
+          java-version: '17'
 
       - name: Cache Synthea JAR
         id: cache-synthea
@@ -56,6 +47,15 @@ jobs:
       - name: Download Synthea
         if: steps.cache-synthea.outputs.cache-hit != 'true'
         run: wget -q https://github.com/synthetichealth/synthea/releases/download/master-branch-latest/synthea-with-dependencies.jar
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      
+      # - name: Install Python dependencies
+      #   run: pip install -r requirements.txt
 
       - name: Generate FHIR data
         run: |
