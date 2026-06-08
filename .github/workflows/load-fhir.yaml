@@ -6,7 +6,7 @@ on:
       config_file:
         description: Path to synthea.properties config file (relative to repo root)
         required: true
-        default: synthea/synthea.properties
+        default: synthea/src/main/resources/synthea.properties
       population:
         description: Number of patients to generate
         required: false
