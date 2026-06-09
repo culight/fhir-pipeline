@@ -1,16 +1,17 @@
 import os
 import json
+import sys
 import glob
 import snowflake.connector
 
-def load_bundles():
+def load_bundles(warehouse, db, schema):
     conn = snowflake.connector.connect(
         account=os.environ['SNOWFLAKE_ACCOUNT'],
         user=os.environ['SNOWFLAKE_USER'],
         password=os.environ['SNOWFLAKE_PASSWORD'],
-        warehouse='XS_WH',
-        database='P01_FHIR',
-        schema='RAW'
+        warehouse=warehouse,
+        database=db,
+        schema=schema
     )
     cursor = conn.cursor()
 
@@ -39,4 +40,9 @@ def load_bundles():
     conn.close()
 
 if __name__ == '__main__':
-    load_bundles()
+    assert len(sys.argv == 3), "Enter Snowflake params: warehouse, database, schema"
+    load_bundles(
+        warehouse=sys.argv[0],
+        db=sys.argv[1],
+        schema=sys.argv[2]
+    )
