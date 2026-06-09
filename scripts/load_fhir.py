@@ -4,14 +4,14 @@ import sys
 import glob
 import snowflake.connector
 
-def load_bundles(warehouse, db, schema):
+def load_bundles():
     conn = snowflake.connector.connect(
         account=os.environ['SNOWFLAKE_ACCOUNT'],
         user=os.environ['SNOWFLAKE_USER'],
         password=os.environ['SNOWFLAKE_PASSWORD'],
-        warehouse=warehouse,
-        database=db,
-        schema=schema
+        warehouse=os.environ['SNOWFLAKE_WAREHOUSE'],
+        database=os.environ['SNOWFLAKE_DB'],
+        schema=os.environ['SNOWFLAKE_SCHEMA']
     )
     cursor = conn.cursor()
 
@@ -41,8 +41,4 @@ def load_bundles(warehouse, db, schema):
 
 if __name__ == '__main__':
     assert len(sys.argv == 3), "Enter Snowflake params: warehouse, database, schema"
-    load_bundles(
-        warehouse=sys.argv[0],
-        db=sys.argv[1],
-        schema=sys.argv[2]
-    )
+    load_bundles()
