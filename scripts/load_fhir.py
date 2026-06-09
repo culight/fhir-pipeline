@@ -40,5 +40,4 @@ def load_bundles():
     conn.close()
 
 if __name__ == '__main__':
-    assert len(sys.argv == 3), "Enter Snowflake params: warehouse, database, schema"
     load_bundles()
