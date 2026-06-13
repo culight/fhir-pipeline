@@ -29,13 +29,15 @@ def load_bundles():
         for entry in bundle.get('entry', []):
             resource = entry.get('resource', {})
             resource_type = resource.get('resourceType')
-            if resource_type:
-                rows.append((json.dumps(resource), resource_type))
+            resource_id = resource.get('id')
+            raw_data = json.dumps(resource)
+            if resource_type and resource_id:
+                rows.append((resource_id, raw_data, resource_type))
 
     # Batch insert
     cursor.executemany("""
-        INSERT INTO FHIR_RESOURCES (raw_data, resource_type)
-        SELECT PARSE_JSON(%s), %s
+        INSERT INTO FHIR_RESOURCES (resource_id, raw_data, resource_type)
+        SELECT %s, PARSE_JSON(%s), %s
     """, rows)
 
     print(f"Loaded {len(rows)} resources from {len(bundle_files)} bundles")
