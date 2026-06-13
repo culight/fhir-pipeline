@@ -35,7 +35,7 @@ def load_bundles():
     for row in rows:
         cursor.execute("""
             INSERT INTO FHIR_RESOURCES (resource_id, raw_data, resource_type)
-            VALUES (%s, PARSE_JSON(%s), %s)
+            SELECT %s, PARSE_JSON(%s), %s
         """, row)
 
     print(f"Loaded {len(rows)} resources from {len(bundle_files)} bundles")
