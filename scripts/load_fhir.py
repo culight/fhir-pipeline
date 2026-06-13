@@ -4,6 +4,8 @@ import sys
 import glob
 import snowflake.connector
 
+FHIR_JSON_OUTPUT = 'output/fhir/*.json'
+
 def load_bundles():
     conn = snowflake.connector.connect(
         account=os.environ['SNOWFLAKE_ACCOUNT'],
@@ -18,7 +20,7 @@ def load_bundles():
     # Truncate before load to keep the table idempotent across runs
     cursor.execute("TRUNCATE TABLE FHIR_RESOURCES")
 
-    bundle_files = glob.glob('output/fhir/*.json')
+    bundle_files = glob.glob(FHIR_JSON_OUTPUT)
     rows = []
 
     for bundle_file in bundle_files:

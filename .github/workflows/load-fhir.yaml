@@ -28,6 +28,11 @@ jobs:
   generate-and-load:
     runs-on: ubuntu-latest
 
+    env:
+      SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE || 'DMDEV_WH' }}
+      SNOWFLAKE_DB: ${{ vars.SNOWFLAKE_DB || 'FHIR_DB' }}
+      SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA || 'FHIR_PIPELINE_SCHEMA_RAW' }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -71,7 +76,4 @@ jobs:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
           SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_WAREHOUSE: ${{ env.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DB: ${{ env.SNOWFLAKE_DB }}
-          SNOWFLAKE_SCHEMA: ${{ env.SNOWFLAKE_SCHEMA }}
         run: python scripts/load_fhir.py
