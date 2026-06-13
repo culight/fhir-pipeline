@@ -10,7 +10,7 @@ on:
       population:
         description: Number of patients to generate
         required: false
-        default: '100'
+        default: '10'
       state:
         description: State for patient generation
         required: false
