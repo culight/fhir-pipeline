@@ -1,6 +1,5 @@
 import os
 import json
-import sys
 import glob
 import snowflake.connector
 
@@ -30,14 +29,13 @@ def load_bundles():
             resource = entry.get('resource', {})
             resource_type = resource.get('resourceType')
             resource_id = resource.get('id')
-            raw_data = json.dumps(resource)
             if resource_type and resource_id:
-                rows.append((resource_id, raw_data, resource_type))
+                rows.append((resource_id, resource, resource_type))
 
     # Batch insert
     cursor.executemany("""
         INSERT INTO FHIR_RESOURCES (resource_id, raw_data, resource_type)
-        SELECT %s, PARSE_JSON(%s), %s
+        VALUES (%s, %s, %s)
     """, rows)
 
     print(f"Loaded {len(rows)} resources from {len(bundle_files)} bundles")
