@@ -1,0 +1,10 @@
+version: 2
+
+# Try using these source definitions instead!
+sources:
+  - name: fhir_r4
+    schema: "{{ target.schema }}_raw"
+    description: FHIR raw data export.
+    tables:
+      - name: fhir_resources
+        description: Pre-configured output of fhir data from Synthea.

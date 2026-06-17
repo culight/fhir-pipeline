@@ -1,0 +1,19 @@
+models:
+  - name: stg_claims
+    description: Raw claims extracted from FHIR json.
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "order_total - tax_paid = subtotal"
+    columns:
+      - name: id
+        description: FHIR resource id for claim.
+        data_tests:
+          - not_null
+          - unique
+      - name: resource_type
+        description: Type of FHIR resource.
+      - name: billable_period_start
+        description: Start of billable period for a claim.
+      - name: billable_period_end
+        description: End of billable period for a claim.
